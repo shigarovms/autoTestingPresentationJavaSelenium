@@ -19,6 +19,9 @@ public interface Configuration extends Config {
     @Key("headless")
     Boolean headless();
 
+    @Key("waitDurSec")
+    int waitDur();
+
     @Key("url.homePage")
     String homePageUrl();
 

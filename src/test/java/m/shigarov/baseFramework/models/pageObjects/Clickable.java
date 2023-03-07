@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static m.shigarov.baseFramework.config.ConfigurationManager.conf;
 import static m.shigarov.baseFramework.driver.WebDriverUtils.getDriver;
 
 public class Clickable extends BaseElement {
@@ -18,7 +19,7 @@ public class Clickable extends BaseElement {
 
     public void clickTheElement() {
         getDriver().switchTo().defaultContent();
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(3));
+        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(conf().waitDur()));
         WebElement element = wait.until(ExpectedConditions.elementToBeClickable(this.locator));
         try {
             element.click();

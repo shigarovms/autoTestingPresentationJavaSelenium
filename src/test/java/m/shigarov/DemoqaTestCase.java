@@ -4,14 +4,14 @@ import com.thedeanda.lorem.Lorem;
 import com.thedeanda.lorem.LoremIpsum;
 import m.shigarov.baseFramework.models.User;
 import m.shigarov.baseFramework.models.pageObjects.FillableForm;
-import m.shigarov.baseFramework.models.pageObjects.HomePage;
+import m.shigarov.baseFramework.models.pageObjects.WebAppPage;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.List;
 import java.util.logging.Logger;
 
-import static m.shigarov.baseFramework.config.ConfigurationManager.configuration;
+import static m.shigarov.baseFramework.config.ConfigurationManager.conf;
 import static m.shigarov.baseFramework.driver.WebDriverUtils.closeLastOpenedTab;
 import static m.shigarov.baseFramework.driver.WebDriverUtils.moveToLastOpenedTab;
 import static m.shigarov.baseFramework.fileTools.JsonUtility.jsonToListOfObjects;
@@ -19,49 +19,52 @@ import static org.testng.Assert.*;
 
 public class DemoqaTestCase extends BaseWebTest {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
-    private final HomePage homePage = new HomePage();
+    private final WebAppPage webAppPage = new WebAppPage();
+    // Lorem generates loremipsum random text
     Lorem lorem = LoremIpsum.getInstance();
 
     @Test
     void alertsTest() {
+        //Let's make logger title with name of the test method on green font
         String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
         logger.info("\u001B[42m" + String.format("Test %s in progress:\n", methodName) + "\u001B[0m");
 
-        driver.navigate().to(homePage.URL);
-        assertTrue(homePage.confirmItIsShown());
+        driver.navigate().to(webAppPage.URL);
+        assertTrue(webAppPage.confirmItIsShown());
         logger.info("home page is opened");
 
-        homePage.alertsFrameWindowsCard.clickTheElement();
-        homePage.alertsItemFromList.clickTheElement();
-        assertTrue(homePage.alertsForm.confirmItIsShown());
+        webAppPage.alertsFrameWindowsCard.clickTheElement();
+        webAppPage.alertsItemFromList.clickTheElement();
+        assertTrue(webAppPage.alertsForm.confirmItIsShown());
         logger.info("alerts form has appeared");
 
-        homePage.buttonToSeeAlert.clickTheElement();
-        assertTrue(homePage.alertWithTextIsVisible("You clicked a button"));
+        webAppPage.buttonToSeeAlert.clickTheElement();
+        assertTrue(webAppPage.alertWithTextIsVisible("You clicked a button"));
         logger.info("alert box with 'You clicked a button' text has appeared");
 
-        homePage.acceptTheAlert();
-        assertTrue(homePage.noAlertsAreVisible());
+        webAppPage.acceptTheAlert();
+        assertTrue(webAppPage.noAlertsAreVisible());
         logger.info("alert box with 'You clicked a button' text has disappeared");
 
-        homePage.buttonToSeeConfirmationAlert.clickTheElement();
-        assertTrue(homePage.alertWithTextIsVisible("Do you confirm action?"));
+        webAppPage.buttonToSeeConfirmationAlert.clickTheElement();
+        assertTrue(webAppPage.alertWithTextIsVisible("Do you confirm action?"));
         logger.info("alert box with 'Do you confirm action?' text has appeared");
 
-        homePage.acceptTheAlert();
-        assertTrue(homePage.noAlertsAreVisible());
+        webAppPage.acceptTheAlert();
+        assertTrue(webAppPage.noAlertsAreVisible());
         logger.info("alert box with 'Do you confirm action?' text has disappeared");
 
-        homePage.buttonToSeePromtAlert.clickTheElement();
-        assertTrue(homePage.alertWithTextIsVisible("Please enter your name"));
+        webAppPage.buttonToSeePromtAlert.clickTheElement();
+        assertTrue(webAppPage.alertWithTextIsVisible("Please enter your name"));
         logger.info("alert box with 'Please enter your name' text has appeared");
 
         String randomText = lorem.getWords(6,9);
-        homePage.fillTheAlertWithText(randomText);
-        homePage.acceptTheAlert();
-        assertEquals(randomText, homePage.getPromtResultText());
-        logger.info(String.format("the text on the page '%s' is the same as the given one '%s'",
-                                        randomText, homePage.getPromtResultText()));
+        webAppPage.fillTheAlertWithText(randomText);
+        webAppPage.acceptTheAlert();
+        String textFromPromt = webAppPage.getPromtResultTextWithout("You entered ");
+        assertEquals(randomText, textFromPromt);
+        logger.info(String.format(
+                "the text on the page '%s' is the same as the given one '%s'", randomText, textFromPromt));
     }
 
     @Test
@@ -70,32 +73,35 @@ public class DemoqaTestCase extends BaseWebTest {
         logger.info("\u001B[42m" + String.format("Test %s in progress:\n", methodName) + "\u001B[0m");
 
         // Navigate to the main page
-        driver.navigate().to(homePage.URL);
-        assertTrue(homePage.confirmItIsShown());
+        driver.navigate().to(webAppPage.URL);
+        assertTrue(webAppPage.confirmItIsShown());
         logger.info("home page is opened");
 
         // Click on Alerts, Frame & Windows button
-        homePage.alertsFrameWindowsCard.clickTheElement();
+        webAppPage.alertsFrameWindowsCard.clickTheElement();
         // In the menu click the Nested Frame button
-        homePage.nestedFramesItemFromList.clickTheElement();
-        assertTrue(homePage.nestedFramesForm.confirmItIsShown());
+        webAppPage.nestedFramesItemFromList.clickTheElement();
+        assertTrue(webAppPage.nestedFramesForm.confirmItIsShown());
         logger.info("Page with Nested Frames forms is opened");
-        assertTrue(homePage.parentFrame.uniqueElementIsInside(false)
-                && homePage.childFrame.uniqueElementIsInside(true));
+        assertTrue(webAppPage.parentFrame.uniqueElementIsInside(false)
+                && webAppPage.childFrame.uniqueElementIsInside(true));
         logger.info("'Parent frame' & 'Child Frame' present on page");
 
         // Select frames option in the left menu
-        homePage.framesItemFromList.clickTheElement();
-        assertEquals(homePage.upperFrame.getMessageFromInside(), homePage.lowerFrame.getMessageFromInside());
+        webAppPage.framesItemFromList.clickTheElement();
+        assertEquals(webAppPage.upperFrame.getMessageFromInside(), webAppPage.lowerFrame.getMessageFromInside());
         logger.info("Messages from upper and lower frames are equal");
     }
 
     @DataProvider(name = "testTables")
-    public Object[][] createData1() {
-        List<User> usersToAddInRegForm = jsonToListOfObjects("src/test/resources/usersToAdd.json");
-        return new Object[][] {
-                {usersToAddInRegForm.get(0)}, {usersToAddInRegForm.get(1)}
-        };
+    public Object[][] createDataForTableTest() {
+        List<User> usersToAddInRegForm = jsonToListOfObjects("src/test/resources/usersToAddTestData.json");
+
+        Object[][] usersForDP = new Object[usersToAddInRegForm.size()][1];
+        for (int i = 0; i < usersToAddInRegForm.size(); i++) {
+            usersForDP[i][0]= usersToAddInRegForm.get(i);
+        }
+        return usersForDP;
     }
 
     @Test(dataProvider = "testTables")
@@ -104,27 +110,27 @@ public class DemoqaTestCase extends BaseWebTest {
         logger.info("\u001B[42m" + String.format("Test %s in progress:\n", methodName) + "\u001B[0m");
 
         // Navigate to the main page
-        driver.navigate().to(homePage.URL);
-        assertTrue(homePage.confirmItIsShown());
+        driver.navigate().to(webAppPage.URL);
+        assertTrue(webAppPage.confirmItIsShown());
         logger.info("home page is opened");
         // Click Elements -> Click Web Tables button
-        homePage.elementsCard.clickTheElement();
-        homePage.webTablesItemFromList.clickTheElement();
-        assertTrue(homePage.webTableForm.confirmItIsShown());
+        webAppPage.elementsCard.clickTheElement();
+        webAppPage.webTablesItemFromList.clickTheElement();
+        assertTrue(webAppPage.webTableForm.confirmItIsShown());
         // Click add button
-        homePage.addButton.clickTheElement();
+        webAppPage.addButton.clickTheElement();
 
         FillableForm registrationForm = new FillableForm(
-                configuration().registrationForm(), "registrationForm");
+                conf().registrationForm(), "registrationForm");
 
         assertTrue(registrationForm.confirmItIsShown());
         logger.info("registration form has appeared on the page");
 
         registrationForm.fillWithUserDataAndSubmit(userFromJson);
-        assertTrue(homePage.checkIfUserInTable(userFromJson));
+        assertTrue(webAppPage.checkIfUserInTable(userFromJson));
         logger.info("user have been successfully added");
-        homePage.removeUserFromTable(userFromJson);
-        assertFalse(homePage.checkIfUserInTable(userFromJson));
+        webAppPage.removeUserFromTable(userFromJson);
+        assertFalse(webAppPage.checkIfUserInTable(userFromJson));
         logger.info("user have been successfully deleted");
 
     }
@@ -135,38 +141,38 @@ public class DemoqaTestCase extends BaseWebTest {
         logger.info("\u001B[42m" + String.format("Test %s in progress:\n", methodName) + "\u001B[0m");
 
         // Navigate to the main page
-        driver.navigate().to(homePage.URL);
-        assertTrue(homePage.confirmItIsShown());
+        driver.navigate().to(webAppPage.URL);
+        assertTrue(webAppPage.confirmItIsShown());
         logger.info("home page is opened");
 
         // Click on the Alerts, Frame & Windows button
-        homePage.alertsFrameWindowsCard.clickTheElement();
-        homePage.browserWindowsItemFromList.clickTheElement();
-        assertTrue(homePage.newTabButton.isVisible());
+        webAppPage.alertsFrameWindowsCard.clickTheElement();
+        webAppPage.browserWindowsItemFromList.clickTheElement();
+        assertTrue(webAppPage.newTabButton.isVisible());
         logger.info("browser windows form is opened");
 
         // Click on new tab
         int windowsBeforeClicking = driver.getWindowHandles().size();
-        homePage.newTabButton.clickTheElement();
+        webAppPage.newTabButton.clickTheElement();
         assertEquals(windowsBeforeClicking, driver.getWindowHandles().size()-1);
         logger.info("new tab with sample page is opened");
         // Close current tab
         closeLastOpenedTab();
-        assertTrue(homePage.newTabButton.isVisible());
+        assertTrue(webAppPage.newTabButton.isVisible());
         logger.info("browser windows form is opened");
         // Click Elements -> Click Links
-        homePage.elementsMenuItem.clickTheElement();
-        homePage.linksItemFromList.clickTheElement();
-        assertTrue(homePage.homeSimpleLink.isVisible());
+        webAppPage.elementsMenuItem.clickTheElement();
+        webAppPage.linksItemFromList.clickTheElement();
+        assertTrue(webAppPage.homeSimpleLink.isVisible());
         logger.info("links form is opened");
         // Click Home link
-        homePage.homeSimpleLink.clickTheElement();
+        webAppPage.homeSimpleLink.clickTheElement();
         moveToLastOpenedTab();
-        assertTrue(homePage.confirmItIsShown());
+        assertTrue(webAppPage.confirmItIsShown());
         logger.info("new tab whit home page is opened");
         // Resume to previous tab
         closeLastOpenedTab();
-        assertTrue(homePage.homeSimpleLink.isVisible());
+        assertTrue(webAppPage.homeSimpleLink.isVisible());
         logger.info("links form is opened");
     }
 }

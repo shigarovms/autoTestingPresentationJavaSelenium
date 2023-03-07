@@ -7,7 +7,7 @@ public class ConfigurationManager {
     private ConfigurationManager() {
     }
 
-    public static Configuration configuration() {
+    public static Configuration conf() {
         return ConfigCache.getOrCreate(Configuration.class);
     }
 }

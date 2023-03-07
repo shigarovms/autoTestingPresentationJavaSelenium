@@ -2,36 +2,30 @@ package m.shigarov.baseFramework.models;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.logging.Logger;
 
-import static m.shigarov.baseFramework.driver.WebDriverUtils.getDriver;
+import static m.shigarov.baseFramework.driver.WebDriverUtils.waitUntilAndFindAnElement;
 
 public class BaseForm {
     public final Logger logger = Logger.getLogger(this.getClass().getName());
-    protected final By correspondingUniqueElementLocator;
+    protected final By uniqueElementLocator;
     protected final String name;
 
-    public BaseForm(String correspondingUniqueElementLocator, String name) {
-        this.correspondingUniqueElementLocator = By.xpath(correspondingUniqueElementLocator);
+    public BaseForm(String uniqueElementLocator, String name) {
+        this.uniqueElementLocator = By.xpath(uniqueElementLocator);
         this.name = name;
     }
 
-    public By getCorrespondingUniqueElementLocator() {
-        return this.correspondingUniqueElementLocator;
+    public By getUniqueElementLocator() {
+        return this.uniqueElementLocator;
     }
     public boolean confirmItIsShown() {
-        return (new WebDriverWait(getDriver(), Duration.ofSeconds(5)))
-                .until(ExpectedConditions.presenceOfElementLocated(
-                        this.correspondingUniqueElementLocator)).isDisplayed();
+        return waitUntilAndFindAnElement(this.uniqueElementLocator).isDisplayed();
     }
 
     public WebElement findTheElement(By locator) {
-        WebDriverWait wait = new WebDriverWait(getDriver(), Duration.ofSeconds(5));
-        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        return waitUntilAndFindAnElement(locator);
     }
 
     @Override

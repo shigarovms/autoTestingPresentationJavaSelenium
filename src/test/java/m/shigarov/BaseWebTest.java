@@ -6,7 +6,7 @@ import org.testng.annotations.*;
 
 import java.util.logging.Logger;
 
-import static m.shigarov.baseFramework.config.ConfigurationManager.configuration;
+import static m.shigarov.baseFramework.config.ConfigurationManager.conf;
 import static m.shigarov.baseFramework.driver.WebDriverUtils.getDriver;
 import static m.shigarov.baseFramework.driver.WebDriverUtils.setWebdriver;
 
@@ -17,7 +17,7 @@ public class BaseWebTest {
 
     @BeforeMethod
     public void preCondition() {
-        configuration = configuration();
+        configuration = conf();
         driver = getDriver();
 
     }
