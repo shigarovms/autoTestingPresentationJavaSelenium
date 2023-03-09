@@ -26,7 +26,8 @@ public class DemoqaTestCase extends BaseWebTest {
     @Test
     void alertsTest() {
         //Let's make logger title with name of the test method on green font
-        String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+        String methodName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
         logger.info("\u001B[42m" + String.format("Test %s in progress:\n", methodName) + "\u001B[0m");
 
         driver.navigate().to(webAppPage.URL);
@@ -58,7 +59,7 @@ public class DemoqaTestCase extends BaseWebTest {
         assertTrue(webAppPage.alertWithTextIsVisible("Please enter your name"));
         logger.info("alert box with 'Please enter your name' text has appeared");
 
-        String randomText = lorem.getWords(6,9);
+        String randomText = lorem.getWords(6, 9);
         webAppPage.fillTheAlertWithText(randomText);
         webAppPage.acceptTheAlert();
         String textFromPromt = webAppPage.getPromtResultTextWithout("You entered ");
@@ -69,7 +70,8 @@ public class DemoqaTestCase extends BaseWebTest {
 
     @Test
     void iFrame() {
-        String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+        String methodName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
         logger.info("\u001B[42m" + String.format("Test %s in progress:\n", methodName) + "\u001B[0m");
 
         // Navigate to the main page
@@ -99,14 +101,15 @@ public class DemoqaTestCase extends BaseWebTest {
 
         Object[][] usersForDP = new Object[usersToAddInRegForm.size()][1];
         for (int i = 0; i < usersToAddInRegForm.size(); i++) {
-            usersForDP[i][0]= usersToAddInRegForm.get(i);
+            usersForDP[i][0] = usersToAddInRegForm.get(i);
         }
         return usersForDP;
     }
 
     @Test(dataProvider = "testTables")
-    void Tables(User userFromJson) {
-        String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+    void Tables(User userFromDP) {
+        String methodName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
         logger.info("\u001B[42m" + String.format("Test %s in progress:\n", methodName) + "\u001B[0m");
 
         // Navigate to the main page
@@ -116,7 +119,7 @@ public class DemoqaTestCase extends BaseWebTest {
         // Click Elements -> Click Web Tables button
         webAppPage.elementsCard.clickTheElement();
         webAppPage.webTablesItemFromList.clickTheElement();
-        assertTrue(webAppPage.webTableForm.confirmItIsShown());
+        assertTrue(webAppPage.webTableOfUsers.confirmItIsShown());
         // Click add button
         webAppPage.addButton.clickTheElement();
 
@@ -126,35 +129,34 @@ public class DemoqaTestCase extends BaseWebTest {
         assertTrue(registrationForm.confirmItIsShown());
         logger.info("registration form has appeared on the page");
 
-        registrationForm.fillWithUserDataAndSubmit(userFromJson);
-        assertTrue(webAppPage.checkIfUserInTable(userFromJson));
+        registrationForm.fillWithUserDataAndSubmit(userFromDP);
+        assertTrue(webAppPage.webTableOfUsers.checkIfUserInTable(userFromDP));
         logger.info("user have been successfully added");
-        webAppPage.removeUserFromTable(userFromJson);
-        assertFalse(webAppPage.checkIfUserInTable(userFromJson));
+        webAppPage.webTableOfUsers.removeUserFromTable(userFromDP);
+        assertFalse(webAppPage.webTableOfUsers.checkIfUserInTable(userFromDP));
         logger.info("user have been successfully deleted");
 
     }
 
     @Test
     void Handles() {
-        String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
+        String methodName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
         logger.info("\u001B[42m" + String.format("Test %s in progress:\n", methodName) + "\u001B[0m");
 
         // Navigate to the main page
         driver.navigate().to(webAppPage.URL);
         assertTrue(webAppPage.confirmItIsShown());
         logger.info("home page is opened");
-
         // Click on the Alerts, Frame & Windows button
         webAppPage.alertsFrameWindowsCard.clickTheElement();
         webAppPage.browserWindowsItemFromList.clickTheElement();
         assertTrue(webAppPage.newTabButton.isVisible());
         logger.info("browser windows form is opened");
-
         // Click on new tab
         int windowsBeforeClicking = driver.getWindowHandles().size();
         webAppPage.newTabButton.clickTheElement();
-        assertEquals(windowsBeforeClicking, driver.getWindowHandles().size()-1);
+        assertEquals(windowsBeforeClicking, driver.getWindowHandles().size() - 1);
         logger.info("new tab with sample page is opened");
         // Close current tab
         closeLastOpenedTab();

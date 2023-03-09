@@ -1,34 +1,27 @@
 package m.shigarov.baseFramework.models;
 
+import java.util.Objects;
+
 public class User {
 
-    private int number;
     private String firstName;
     private String lastName;
-    private String email;
     private int age;
+    private String email;
     private int salary;
     private String department;
 
     public User(){}
 
-    public User(int number, String firstName, String lastName, String email, int age, int salary, String department) {
-        this.number = number;
+    public User(String firstName, String lastName, int age, String email, int salary, String department) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
         this.age = age;
+        this.email = email;
         this.salary = salary;
         this.department = department;
     }
 
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -76,5 +69,18 @@ public class User {
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return  Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(age, user.age) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(salary, user.salary) &&
+                Objects.equals(department, user.department);
     }
 }

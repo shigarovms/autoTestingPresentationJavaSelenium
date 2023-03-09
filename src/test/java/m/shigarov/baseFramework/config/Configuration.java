@@ -111,12 +111,18 @@ public interface Configuration extends Config {
     @Key("locator.registrationForm")
     String registrationForm();
 
-    @Key("locator.xpathToFormatToGetUserEmailField")
-    String xpathToFormatToGetUserEmailField();
-
     @Key("locator.xpathToFormatToGetUserRow")
     String xpathToFormatToGetUserRow();
 
     @Key("locator.xpathToFormatToGetRemoveUserButton")
     String xpathToFormatToGetRemoveUserButton();
+
+    @Key("locator.webTableUniqueElement")
+    String webTableUniqueElement();
+
+    @Key("locator.allFilledRows")
+    String allFilledRows();
+
+    @Key("locator.eachCellInTheRow")
+    String eachCellInTheRow();
 }

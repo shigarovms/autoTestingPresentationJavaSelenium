@@ -1,6 +1,6 @@
 [
-  {"number": 1 , "firstName": "John", "lastName": "Snow",
+  {"firstName": "John", "lastName": "Snow",
     "email": "knownothing@gmail.com", "age": 30, "salary": 3000, "department": "alpha"},
-  {"number": 2, "firstName": "Buttercup", "lastName": "Cumbersnatch",
+  {"firstName": "Buttercup", "lastName": "Cumbersnatch",
     "email": "BudapestCandygram@mail.io", "age": 40, "salary": 2000, "department": "beta"}
 ]

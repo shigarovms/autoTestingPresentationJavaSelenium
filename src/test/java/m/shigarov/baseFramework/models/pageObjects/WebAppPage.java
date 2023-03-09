@@ -2,10 +2,7 @@ package m.shigarov.baseFramework.models.pageObjects;
 
 import m.shigarov.baseFramework.models.BaseElement;
 import m.shigarov.baseFramework.models.BaseForm;
-import m.shigarov.baseFramework.models.User;
-import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -50,7 +47,8 @@ public class WebAppPage extends BaseForm {
     // 3
     public Clickable elementsCard = new Clickable(conf().elementsCard(), "elementsCard");
     public Clickable webTablesItemFromList = new Clickable(conf().webTablesItemFromList(), "webTablesItemFromList");
-    public BaseForm webTableForm = new BaseForm(conf().webTableForm(), "webTableForm");
+    public WebTable webTableOfUsers =
+            new WebTable(conf().webTableForm(), conf().webTableUniqueElement(), "webTableForm");
     public Clickable addButton = new Clickable(conf().addButton(), "addButton");
 
     // 4
@@ -88,23 +86,5 @@ public class WebAppPage extends BaseForm {
 
     public String getPromtResultTextWithout(String textToDelete) {
         return waitUntilAndFindAnElement(promptResult.getLocator()).getText().replace(textToDelete, "");
-    }
-
-    public boolean checkIfUserInTable(User user) {
-        By userEmailLocator = By.xpath(String.format(conf().xpathToFormatToGetUserEmailField(), user.getEmail()));
-        try {
-            waitUntilAndFindAnElement(userEmailLocator);
-        } catch (TimeoutException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public void removeUserFromTable(User user) {
-        By userRowLocator = By.xpath(String.format(conf().xpathToFormatToGetUserRow(), user.getEmail()));
-        WebElement thisUserRow = waitUntilAndFindAnElement(userRowLocator);
-        By removeThisUserButtonLocator = By.xpath(conf().xpathToFormatToGetRemoveUserButton());
-        WebElement removeThisUserButton = thisUserRow.findElement(removeThisUserButtonLocator);
-        removeThisUserButton.click();
     }
 }
