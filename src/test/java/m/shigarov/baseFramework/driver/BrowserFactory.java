@@ -9,6 +9,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.AbstractDriverOptions;
 
+import static m.shigarov.baseFramework.config.ConfigurationManager.conf;
+
 public enum BrowserFactory {
     CHROME {
         @Override
@@ -21,10 +23,9 @@ public enum BrowserFactory {
         @Override
         public ChromeOptions getOptions() {
             ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.addArguments(START_MAXIMIZED);
-            chromeOptions.addArguments("--disable-infobars");
-            chromeOptions.addArguments("--disable-notifications");
-            chromeOptions.addArguments("--headless=new");
+            for (String option : conf().chromeOptions()) {
+                chromeOptions.addArguments(option);
+            }
 
             return chromeOptions;
         }
@@ -39,14 +40,13 @@ public enum BrowserFactory {
         @Override
         public FirefoxOptions getOptions() {
             FirefoxOptions firefoxOptions = new FirefoxOptions();
-            firefoxOptions.addArguments(START_MAXIMIZED);
-            firefoxOptions.addArguments("--headless");
+            for (String option : conf().firefoxOptions()) {
+                firefoxOptions.addArguments(option);
+            }
 
             return firefoxOptions;
         }
     };
-
-    private static final String START_MAXIMIZED = "--start-maximized";
 
     public abstract WebDriver createDriver();
     public abstract AbstractDriverOptions<?> getOptions();

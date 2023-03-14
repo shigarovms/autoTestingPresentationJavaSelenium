@@ -5,22 +5,24 @@ import org.openqa.selenium.WebElement;
 
 import java.util.logging.Logger;
 
-import static m.shigarov.baseFramework.driver.WebDriverUtils.waitUntilAndFindAnElement;
+import static m.shigarov.baseFramework.driver.WaitUtils.waitUntilAndFindAnElement;
 
 public class BaseForm {
     public final Logger logger = Logger.getLogger(this.getClass().getName());
-    protected final By uniqueElementLocator;
-    protected final String name;
+    private final By uniqueElementLocator;
+    private final String name;
+    public SideMenu sideMenu;
 
-    public BaseForm(String uniqueElementLocator, String name) {
-        this.uniqueElementLocator = By.xpath(uniqueElementLocator);
+    public BaseForm(By uniqueElementLocator, String name) {
+        this.uniqueElementLocator = uniqueElementLocator;
         this.name = name;
+        this.sideMenu = new SideMenu();
     }
 
     public By getUniqueElementLocator() {
         return this.uniqueElementLocator;
     }
-    public boolean confirmItIsShown() {
+    public boolean isVisible() {
         return waitUntilAndFindAnElement(this.uniqueElementLocator).isDisplayed();
     }
 

@@ -7,8 +7,8 @@ import org.testng.annotations.*;
 import java.util.logging.Logger;
 
 import static m.shigarov.baseFramework.config.ConfigurationManager.conf;
-import static m.shigarov.baseFramework.driver.WebDriverUtils.getDriver;
-import static m.shigarov.baseFramework.driver.WebDriverUtils.setWebdriver;
+import static m.shigarov.baseFramework.driver.Singleton.getDriver;
+import static m.shigarov.baseFramework.driver.Singleton.teardropWebdriver;
 
 public class BaseWebTest {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
@@ -25,7 +25,7 @@ public class BaseWebTest {
     @AfterMethod
     public void postCondition() {
         driver.quit();
-        logger.warning("webdriver has been finished");
-        setWebdriver(null);
+        teardropWebdriver();
+        logger.info("webdriver has been finished");
     }
 }
